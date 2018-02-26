@@ -73,6 +73,7 @@ class Check(models.Model):
     last_ping_body = models.CharField(max_length=10000, blank=True)
     alert_after = models.DateTimeField(null=True, blank=True, editable=False)
     status = models.CharField(max_length=6, choices=STATUSES, default="new")
+    execution_time = models.IntegerField(default=0)
 
     def name_then_code(self):
         if self.name:
@@ -185,13 +186,16 @@ class Check(models.Model):
     def has_confirmation_link(self):
         return "confirm" in self.last_ping_body.lower()
 
-    def ping(self, remote_addr, scheme, method, ua, body):
+    def ping(self, remote_addr, scheme, method, ua, body, execution_time=None):
         self.n_pings = models.F("n_pings") + 1
         self.last_ping = timezone.now()
         self.last_ping_body = body[:10000]
         self.alert_after = self.get_alert_after()
         if self.status in ("new", "paused"):
             self.status = "up"
+
+        if execution_time is not None and int(execution_time) > 0:
+            self.execution_time = int(execution_time)
 
         self.save()
         self.refresh_from_db()

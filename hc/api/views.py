@@ -30,7 +30,7 @@ def ping(request, code):
     ua = headers.get("HTTP_USER_AGENT", "")
     body = request.body[:10000]
 
-    check.ping(remote_addr, scheme, method, ua, body)
+    check.ping(remote_addr, scheme, method, ua, body, request.GET.get('execution_time'))
 
     response = HttpResponse("OK")
     response["Access-Control-Allow-Origin"] = "*"

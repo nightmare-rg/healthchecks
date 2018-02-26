@@ -25,6 +25,7 @@
             <a href="?sort=-last_ping" class="default">Last Ping</span></a>
             {% endif %}
         </th>
+        <th>Execution Time</th>
         <th></th>
     </tr>
     {% for check in checks|sortchecks:sort %}
@@ -96,6 +97,9 @@
         {% else %}
             <div class="last-ping-never">Never</div>
         {% endif %}
+        </td>
+        <td>
+            {{ check.execution_time }} Seconds
         </td>
         <td>
             <div class="check-menu dropdown">
